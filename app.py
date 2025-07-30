@@ -55,6 +55,14 @@ def check_password():
 
     def password_entered():
         """Vérifie si le mot de passe saisi est correct"""
+        # Vérifier que password_input existe dans session_state
+        if (
+            "password_input" not in st.session_state
+            or not st.session_state["password_input"]
+        ):
+            st.session_state["password_correct"] = False
+            return
+
         if hash_password(st.session_state["password_input"]) == HASHED_PASSWORD:
             st.session_state["password_correct"] = True
             del st.session_state["password_input"]  # Ne pas stocker le mot de passe
