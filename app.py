@@ -103,7 +103,7 @@ def check_password():
 
     elif not st.session_state["password_correct"]:
         # Mot de passe incorrect
-        st.error("🚫 Mot de passe incorrect")
+        st.error("Mot de passe incorrect")
 
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
@@ -185,7 +185,7 @@ with st.sidebar:
     st.divider()
 
     # Bouton de déconnexion
-    if st.button("🚪 Se déconnecter", type="secondary", use_container_width=True):
+    if st.button("Se déconnecter", type="secondary", use_container_width=True):
         # Réinitialiser l'état d'authentification
         for key in st.session_state.keys():
             del st.session_state[key]
