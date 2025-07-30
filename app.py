@@ -70,20 +70,13 @@ def check_password():
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                height: 70vh;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 margin: -1rem;
                 border-radius: 10px;
             ">
                 <div style="
-                    background: white;
-                    padding: 3rem;
-                    border-radius: 15px;
-                    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
                     text-align: center;
-                    min-width: 400px;
                 ">
-                    <h1 style="color: #2d3748; margin-bottom: 1rem;">🔐 Accès Sécurisé</h1>
+                    <h1 style="color: #2d3748; margin-bottom: 1rem;">Accès Sécurisé</h1>
                     <h2 style="color: #4a5568; margin-bottom: 2rem; font-weight: 400;">Bureau d'Étude Tourisme</h2>
                     <p style="color: #718096; margin-bottom: 2rem;">Castagniccia Casinca</p>
                 </div>
