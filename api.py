@@ -11,7 +11,6 @@ from backup_manager import BackupManager
 app = FastAPI(
     title="API Bureau d'Étude - Tourisme Castagniccia Casinca",
     description="API REST pour collecter les données de fréquentation et profils visiteurs",
-    version="1.0.0",
 )
 
 # Configuration CORS pour permettre les appels depuis un site web
@@ -46,7 +45,7 @@ class VisiteurCreate(BaseModel):
     type_personna: str = Field(
         ...,
         description="Centres d'intérêt",
-        pattern="^(Culture/Patrimoine|Randonnée|Plage|Gastronomie|Sport|Détente)$",
+        pattern="^(Culture/Patrimoine|Randonnée|Plage|Gastronomie|Détente)$",
     )
 
     class Config:
@@ -67,7 +66,6 @@ class PageVue(BaseModel):
     categorie: str = Field(
         ...,
         description="Catégorie de la page",
-        pattern="^(Accueil|Activités|Hébergement|Restauration|Culture|Nature|Événements|Pratique)$",
     )
 
     class Config:
