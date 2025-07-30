@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Script pour générer des données de démonstration pour l'application Office de Tourisme
+Script pour générer des données de démonstration pour l'application Tourisme Castagniccia Casinca
 """
 
 import random
@@ -11,7 +11,7 @@ from database import DatabaseManager
 def generate_sample_data():
     """Génère des données d'exemple pour démonstration"""
 
-    print("🏖️ Génération des données d'exemple pour l'Office de Tourisme...")
+    print("🏖️ Génération des données d'exemple pour l'Tourisme Castagniccia Casinca...")
 
     # Initialiser la base de données
     db = DatabaseManager()
@@ -36,7 +36,7 @@ def generate_sample_data():
     ]
 
     # Ajouter des vues pour les pages (entre 5 et 50 vues par page)
-    print("📄 Ajout des vues de pages...")
+    print("Ajout des vues de pages...")
     for nom_page, categorie in pages_data:
         nombre_vues = random.randint(5, 50)
         for _ in range(nombre_vues):
@@ -68,7 +68,7 @@ def generate_sample_data():
     ]
 
     # Générer des visiteurs réalistes
-    print("👥 Ajout des visiteurs...")
+    print("Ajout des visiteurs...")
     nombre_visiteurs = random.randint(50, 100)
 
     for _ in range(nombre_visiteurs):
@@ -83,7 +83,7 @@ def generate_sample_data():
         else:
             temps_sejour = random.choices(temps_sejours, weights=[40, 35, 15, 10])[0]
 
-        # Distribution d'âge réaliste pour un office de tourisme
+        # Distribution d'âge réaliste pour un Tourisme Castagniccia Casinca
         tranche_age = random.choices(tranches_ages, weights=[15, 20, 25, 20, 15, 5])[0]
 
         # Centres d'intérêt avec des préférences régionales
@@ -98,9 +98,9 @@ def generate_sample_data():
     for _ in range(random.randint(200, 500)):
         db.increment_vues_totales()
 
-    print("✅ Données d'exemple générées avec succès!")
-    print(f"📊 {len(pages_data)} types de pages créés")
-    print(f"👥 {nombre_visiteurs} visiteurs ajoutés")
+    print("Données d'exemple générées avec succès!")
+    print(f"{len(pages_data)} types de pages créés")
+    print(f"{nombre_visiteurs} visiteurs ajoutés")
     print("🚀 Vous pouvez maintenant lancer l'application avec: streamlit run app.py")
 
 

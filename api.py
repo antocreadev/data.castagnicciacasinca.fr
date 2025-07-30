@@ -9,7 +9,7 @@ from backup_manager import BackupManager
 
 # Initialisation de l'API
 app = FastAPI(
-    title="API Bureau d'Étude - Office de Tourisme",
+    title="API Bureau d'Étude - Tourisme Castagniccia Casinca",
     description="API REST pour collecter les données de fréquentation et profils visiteurs",
     version="1.0.0",
 )
@@ -107,7 +107,7 @@ class StatsResponse(BaseModel):
 async def root():
     """Point d'entrée de l'API"""
     return {
-        "message": "API Bureau d'Étude - Office de Tourisme",
+        "message": "API Bureau d'Étude - Tourisme Castagniccia Casinca",
         "version": "1.0.0",
         "endpoints": {
             "POST /visiteur": "Ajouter un visiteur",

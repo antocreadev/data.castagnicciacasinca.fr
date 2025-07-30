@@ -1,5 +1,5 @@
 """
-Utilitaires de maintenance pour l'application Office de Tourisme
+Utilitaires de maintenance pour l'application Tourisme Castagniccia Casinca
 """
 
 from database import DatabaseManager
@@ -32,14 +32,14 @@ class MaintenanceTools:
                 ],
             )
             df.to_csv(filename, index=False)
-            print(f"✅ Données exportées vers {filename}")
+            print(f"Données exportées vers {filename}")
         else:
-            print("❌ Aucune donnée à exporter")
+            print(" Aucune donnée à exporter")
 
     def reset_database(self):
         """Remet à zéro la base de données"""
         confirm = input(
-            "⚠️  Êtes-vous sûr de vouloir réinitialiser la base de données ? (oui/non): "
+            " Êtes-vous sûr de vouloir réinitialiser la base de données ? (oui/non): "
         )
         if confirm.lower() == "oui":
             conn = self.db.get_connection()
@@ -52,9 +52,9 @@ class MaintenanceTools:
 
             conn.commit()
             conn.close()
-            print("✅ Base de données réinitialisée")
+            print("Base de données réinitialisée")
         else:
-            print("❌ Réinitialisation annulée")
+            print(" Réinitialisation annulée")
 
     def get_database_stats(self):
         """Affiche les statistiques de la base de données"""
@@ -78,11 +78,11 @@ class MaintenanceTools:
 
         conn.close()
 
-        print("📊 Statistiques de la base de données")
+        print("Statistiques de la base de données")
         print("=" * 40)
-        print(f"👥 Nombre de visiteurs: {nb_visiteurs}")
-        print(f"📄 Nombre de pages trackées: {nb_pages}")
-        print(f"👁️  Vues totales du site: {vues_totales}")
+        print(f"Nombre de visiteurs: {nb_visiteurs}")
+        print(f"Nombre de pages trackées: {nb_pages}")
+        print(f" Vues totales du site: {vues_totales}")
         print(f"🕒 Dernière visite: {derniere_visite or 'Aucune'}")
         print("=" * 40)
 
@@ -95,25 +95,25 @@ class MaintenanceTools:
             import shutil
 
             shutil.copy("tourisme_data.db", filename)
-            print(f"✅ Sauvegarde créée: {filename}")
+            print(f"Sauvegarde créée: {filename}")
         except Exception as e:
-            print(f"❌ Erreur lors de la sauvegarde: {e}")
+            print(f" Erreur lors de la sauvegarde: {e}")
 
     def restore_database(self, backup_filename):
         """Restaure la base de données depuis une sauvegarde"""
         confirm = input(
-            f"⚠️  Êtes-vous sûr de vouloir restaurer depuis {backup_filename} ? (oui/non): "
+            f" Êtes-vous sûr de vouloir restaurer depuis {backup_filename} ? (oui/non): "
         )
         if confirm.lower() == "oui":
             try:
                 import shutil
 
                 shutil.copy(backup_filename, "tourisme_data.db")
-                print("✅ Base de données restaurée")
+                print("Base de données restaurée")
             except Exception as e:
-                print(f"❌ Erreur lors de la restauration: {e}")
+                print(f" Erreur lors de la restauration: {e}")
         else:
-            print("❌ Restauration annulée")
+            print(" Restauration annulée")
 
 
 def main():
@@ -121,7 +121,7 @@ def main():
     tools = MaintenanceTools()
 
     while True:
-        print("\n🔧 Outils de Maintenance - Office de Tourisme")
+        print("\n🔧 Outils de Maintenance - Tourisme Castagniccia Casinca")
         print("=" * 50)
         print("1. Afficher les statistiques")
         print("2. Exporter toutes les données")
@@ -148,7 +148,7 @@ def main():
             print("👋 Au revoir!")
             break
         else:
-            print("❌ Choix invalide")
+            print(" Choix invalide")
 
 
 if __name__ == "__main__":
