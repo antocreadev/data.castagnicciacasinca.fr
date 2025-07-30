@@ -8,14 +8,133 @@ from backup_manager import BackupManager
 from datetime import datetime, timedelta
 import os
 import numpy as np
+import hashlib
+from dotenv import load_dotenv
+
+# Charger les variables d'environnement
+load_dotenv()
 
 # Configuration de la page
 st.set_page_config(
     page_title="Bureau d'Étude - Tourisme Castagniccia Casinca",
-    page_icon="🏖️",
+    page_icon="logo.jpg",
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+
+# Fonction pour hasher le mot de passe
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
+
+# Configuration du mot de passe depuis le fichier .env
+CORRECT_PASSWORD = os.getenv("ADMIN_PASSWORD")
+
+# Vérifier que le mot de passe est défini
+if not CORRECT_PASSWORD:
+    st.error("❌ **Erreur de configuration**")
+    st.error(
+        "Le fichier `.env` n'existe pas ou la variable `ADMIN_PASSWORD` n'est pas définie."
+    )
+    st.info("**Solution :**")
+    st.code(
+        """
+# Créez un fichier .env dans le répertoire du projet avec :
+ADMIN_PASSWORD=votre_mot_de_passe_ici
+    """
+    )
+    st.stop()
+
+HASHED_PASSWORD = hash_password(CORRECT_PASSWORD)
+
+
+# Fonction d'authentification
+def check_password():
+    """Retourne True si l'utilisateur a saisi le bon mot de passe"""
+
+    def password_entered():
+        """Vérifie si le mot de passe saisi est correct"""
+        if hash_password(st.session_state["password_input"]) == HASHED_PASSWORD:
+            st.session_state["password_correct"] = True
+            del st.session_state["password_input"]  # Ne pas stocker le mot de passe
+        else:
+            st.session_state["password_correct"] = False
+
+    # Première visite ou mot de passe incorrect
+    if "password_correct" not in st.session_state:
+        # Interface de connexion
+        st.markdown(
+            """
+            <div style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 70vh;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                margin: -1rem;
+                border-radius: 10px;
+            ">
+                <div style="
+                    background: white;
+                    padding: 3rem;
+                    border-radius: 15px;
+                    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+                    text-align: center;
+                    min-width: 400px;
+                ">
+                    <h1 style="color: #2d3748; margin-bottom: 1rem;">🔐 Accès Sécurisé</h1>
+                    <h2 style="color: #4a5568; margin-bottom: 2rem; font-weight: 400;">Bureau d'Étude Tourisme</h2>
+                    <p style="color: #718096; margin-bottom: 2rem;">Castagniccia Casinca</p>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        # Formulaire de connexion centré
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            st.text_input(
+                "Mot de passe",
+                type="password",
+                on_change=password_entered,
+                key="password_input",
+                placeholder="Saisissez votre mot de passe",
+            )
+
+            if st.button("Se connecter", type="primary", use_container_width=True):
+                password_entered()
+
+        return False
+
+    elif not st.session_state["password_correct"]:
+        # Mot de passe incorrect
+        st.error("🚫 Mot de passe incorrect")
+
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            st.text_input(
+                "Mot de passe",
+                type="password",
+                on_change=password_entered,
+                key="password_input",
+                placeholder="Saisissez votre mot de passe",
+            )
+
+            if st.button("Se connecter", type="primary", use_container_width=True):
+                password_entered()
+
+        return False
+
+    else:
+        # Mot de passe correct
+        return True
+
+
+# Vérifier l'authentification avant d'afficher l'application
+if not check_password():
+    st.stop()
 
 
 # Initialisation de la base de données
@@ -58,7 +177,6 @@ st.markdown(
 
 # Sidebar pour la navigation
 with st.sidebar:
-
     page = st.selectbox(
         "Navigation",
         [
@@ -70,6 +188,15 @@ with st.sidebar:
             "Gestion des Sauvegardes",
         ],
     )
+
+    st.divider()
+
+    # Bouton de déconnexion
+    if st.button("🚪 Se déconnecter", type="secondary", use_container_width=True):
+        # Réinitialiser l'état d'authentification
+        for key in st.session_state.keys():
+            del st.session_state[key]
+        st.rerun()
 
 if page == "Vue d'ensemble":
 
