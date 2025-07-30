@@ -69,6 +69,19 @@ def check_password():
         else:
             st.session_state["password_correct"] = False
 
+    def validate_password():
+        """Force la validation du mot de passe depuis le bouton"""
+        if "password_input" in st.session_state and st.session_state["password_input"]:
+            if hash_password(st.session_state["password_input"]) == HASHED_PASSWORD:
+                st.session_state["password_correct"] = True
+                del st.session_state["password_input"]  # Ne pas stocker le mot de passe
+                st.rerun()
+            else:
+                st.session_state["password_correct"] = False
+                st.error("Mot de passe incorrect")
+        else:
+            st.error("Veuillez saisir un mot de passe")
+
     # Première visite ou mot de passe incorrect
     if "password_correct" not in st.session_state:
         # Interface de connexion
@@ -96,35 +109,59 @@ def check_password():
         # Formulaire de connexion centré
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            st.text_input(
-                "Mot de passe",
-                type="password",
-                on_change=password_entered,
-                key="password_input",
-                placeholder="Saisissez votre mot de passe",
-            )
+            # Utiliser un formulaire pour éviter les soumissions accidentelles
+            with st.form("login_form", clear_on_submit=False):
+                password_value = st.text_input(
+                    "Mot de passe",
+                    type="password",
+                    placeholder="Saisissez votre mot de passe",
+                    key="password_form_input",
+                )
 
-            if st.button("Se connecter", type="primary", use_container_width=True):
-                password_entered()
+                submitted = st.form_submit_button(
+                    "Se connecter", type="primary", use_container_width=True
+                )
+
+                if submitted:
+                    if password_value:
+                        if hash_password(password_value) == HASHED_PASSWORD:
+                            st.session_state["password_correct"] = True
+                            st.rerun()
+                        else:
+                            st.error("Mot de passe incorrect")
+                    else:
+                        st.error("Veuillez saisir un mot de passe")
 
         return False
 
     elif not st.session_state["password_correct"]:
         # Mot de passe incorrect
-        st.error("Mot de passe incorrect")
+        st.error("Mot de passe incorrect. Veuillez réessayer.")
 
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            st.text_input(
-                "Mot de passe",
-                type="password",
-                on_change=password_entered,
-                key="password_input",
-                placeholder="Saisissez votre mot de passe",
-            )
+            # Utiliser un formulaire pour éviter les soumissions accidentelles
+            with st.form("retry_login_form", clear_on_submit=False):
+                password_value = st.text_input(
+                    "Mot de passe",
+                    type="password",
+                    placeholder="Saisissez votre mot de passe",
+                    key="password_retry_input",
+                )
 
-            if st.button("Se connecter", type="primary", use_container_width=True):
-                password_entered()
+                submitted = st.form_submit_button(
+                    "Se connecter", type="primary", use_container_width=True
+                )
+
+                if submitted:
+                    if password_value:
+                        if hash_password(password_value) == HASHED_PASSWORD:
+                            st.session_state["password_correct"] = True
+                            st.rerun()
+                        else:
+                            st.error("Mot de passe incorrect")
+                    else:
+                        st.error("Veuillez saisir un mot de passe")
 
         return False
 
