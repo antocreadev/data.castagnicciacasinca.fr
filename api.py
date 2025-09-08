@@ -29,24 +29,11 @@ backup_manager = BackupManager()
 
 # Modèles Pydantic pour la validation des données
 class VisiteurCreate(BaseModel):
-    type_visiteur: str = Field(
-        ..., description="Type de visiteur", pattern="^(Couple|Famille|Solitaire)$"
-    )
-    temps_sejour: str = Field(
-        ...,
-        description="Temps de séjour",
-        pattern="^(Moins d'une semaine|1-2 semaines|Plus d'un mois|Plus de 3 mois)$",
-    )
-    tranche_age: str = Field(
-        ...,
-        description="Tranche d'âge",
-        pattern="^(18-25 ans|26-35 ans|36-45 ans|46-55 ans|56-65 ans|Plus de 65 ans)$",
-    )
-    type_personna: str = Field(
-        ...,
-        description="Centres d'intérêt",
-        pattern="^(Culture/Patrimoine|Randonnée|Plage|Gastronomie|Détente)$",
-    )
+    # Accepter des valeurs libres envoyées par les clients (aucune contrainte côté API)
+    type_visiteur: str = Field(..., description="Type de visiteur")
+    temps_sejour: str = Field(..., description="Temps de séjour")
+    tranche_age: str = Field(..., description="Tranche d'âge")
+    type_personna: str = Field(..., description="Centres d'intérêt")
 
     class Config:
         json_schema_extra = {
@@ -63,10 +50,7 @@ class PageVue(BaseModel):
     nom_page: str = Field(
         ..., description="Nom de la page visitée", min_length=1, max_length=255
     )
-    categorie: str = Field(
-        ...,
-        description="Catégorie de la page",
-    )
+    categorie: str = Field(..., description="Catégorie de la page")
 
     class Config:
         json_schema_extra = {
@@ -359,6 +343,7 @@ async def valeurs_valides():
     Retourne les listes des valeurs acceptées pour créer des formulaires dynamiques.
     """
     return {
+        "note": "L'API accepte des valeurs libres (texte) pour tous les champs. Les listes ci-dessous sont indicatives.",
         "type_visiteur": ["Couple", "Famille", "Solitaire"],
         "temps_sejour": [
             "Moins d'une semaine",

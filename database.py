@@ -40,19 +40,52 @@ class DatabaseManager:
         """
         )
 
-        # Table pour les visiteurs
+        # Table pour les visiteurs (valeurs libres, sans contraintes CHECK)
         cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS visiteurs (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                type_visiteur TEXT NOT NULL CHECK (type_visiteur IN ('Couple', 'Famille', 'Solitaire')),
-                temps_sejour TEXT NOT NULL CHECK (temps_sejour IN ('Moins d''une semaine', '1-2 semaines', 'Plus d''un mois', 'Plus de 3 mois')),
-                tranche_age TEXT NOT NULL CHECK (tranche_age IN ('18-25 ans', '26-35 ans', '36-45 ans', '46-55 ans', '56-65 ans', 'Plus de 65 ans')),
-                type_personna TEXT NOT NULL CHECK (type_personna IN ('Culture/Patrimoine', 'Randonnée', 'Plage', 'Gastronomie', 'Sport', 'Détente')),
+                type_visiteur TEXT NOT NULL,
+                temps_sejour TEXT NOT NULL,
+                tranche_age TEXT NOT NULL,
+                type_personna TEXT NOT NULL,
                 date_visite DATETIME DEFAULT CURRENT_TIMESTAMP
             )
         """
         )
+
+        # Migration: si d'anciennes contraintes CHECK existent, recréer la table sans contraintes
+        try:
+            cursor.execute("PRAGMA table_info(visiteurs)")
+            cols = cursor.fetchall()
+            col_defs = {c[1]: c[2] for c in cols}  # name -> type
+            # Vérification basique: si la définition contient CHECK, on migre
+            cursor.execute("SELECT sql FROM sqlite_master WHERE type='table' AND name='visiteurs'")
+            table_sql_row = cursor.fetchone()
+            if table_sql_row and table_sql_row[0] and "CHECK" in table_sql_row[0].upper():
+                cursor.execute("BEGIN")
+                cursor.execute(
+                    """
+                    CREATE TABLE IF NOT EXISTS visiteurs__new (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        type_visiteur TEXT NOT NULL,
+                        temps_sejour TEXT NOT NULL,
+                        tranche_age TEXT NOT NULL,
+                        type_personna TEXT NOT NULL,
+                        date_visite DATETIME DEFAULT CURRENT_TIMESTAMP
+                    )
+                    """
+                )
+                cursor.execute(
+                    "INSERT INTO visiteurs__new (id, type_visiteur, temps_sejour, tranche_age, type_personna, date_visite) "
+                    "SELECT id, type_visiteur, temps_sejour, tranche_age, type_personna, date_visite FROM visiteurs"
+                )
+                cursor.execute("DROP TABLE visiteurs")
+                cursor.execute("ALTER TABLE visiteurs__new RENAME TO visiteurs")
+                conn.commit()
+        except Exception:
+            # Si la migration échoue, on ignore pour ne pas bloquer le démarrage
+            pass
 
         # Insérer une donnée initiale pour les vues totales si elle n'existe pas
         cursor.execute("SELECT COUNT(*) FROM vues_totales")
