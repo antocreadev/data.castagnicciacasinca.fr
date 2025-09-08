@@ -11,3 +11,4 @@ backups/
 .env.local
 .env.production
 tourisme_data.db
+tourisme_data.db
